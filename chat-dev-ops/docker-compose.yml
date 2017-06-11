@@ -16,6 +16,29 @@ services:
     ports:
       - "3000:3000"
 
+  # Hubot is your friendly robot sidekick.
+  # https://hubot.github.com/ 
+  hubot:
+    image: rocketchat/hubot-rocketchat:1.0.8
+    restart: always
+    environment:
+      - ROCKETCHAT_URL=rocketchat:3000
+      - ROCKETCHAT_ROOM=
+      - LISTEN_ON_ALL_PUBLIC=true
+      - ROCKETCHAT_USER=bender
+      - ROCKETCHAT_PASSWORD=password
+      - BOT_NAME=bender
+      - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-google,hubot-reddit,hubot-bofh,hubot-bookmark,hubot-shipit,hubot-maps
+    depends_on:
+      - rocketchat
+    links:
+      - rocketchat:rocketchat
+      - redis
+    ports:
+      - 3001:8080
+    volumes:
+      - ./hubot-scripts/scripts:/home/hubot/scripts \
+
   # GitHub alternative
   # https://about.gitlab.com/
   gitlab:
@@ -33,6 +56,10 @@ services:
     volumes:
       - ./data/gitlab/gitlab:/home/git/data:Z
     environment:
+      - GITLAB_SECRETS_DB_KEY_BASE="${GITLAB_SECRETS_DB_KEY_BASE}"         # TODO: Is this working?
+      - GITLAB_SECRETS_SECRET_KEY_BASE="${GITLAB_SECRETS_SECRET_KEY_BASE}" # TODO: Is this working?
+      - GITLAB_SECRETS_OTP_KEY_BASE="${GITLAB_SECRETS_OTP_KEY_BASE}"       # TODO: Is this working?
+
       - DB_ADAPTER=postgresql
       - DB_HOST=postgresql
       - DB_PORT=5432

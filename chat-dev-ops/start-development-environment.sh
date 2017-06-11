@@ -16,15 +16,15 @@ generate_concourse_keys() {
 generate_gitlab_secrets() {
     GITLAB_SECRETS_DB_KEY_BASE=$(docker run --rm kciepluc/pwgen-docker -B -s 128)
     GITLAB_SECRETS_SECRET_KEY_BASE=$(docker run --rm kciepluc/pwgen-docker -B -s 128)
-    GITLAB_SECRETS_SECRET_KEY_BASE=$(docker run --rm kciepluc/pwgen-docker -B -s 128)
+    GITLAB_SECRETS_OTP_KEY_BASE=$(docker run --rm kciepluc/pwgen-docker -B -s 128)
     touch ./data/gitlab_secrets.sh && chmod u+x ./data/gitlab_secrets.sh
     cat > ./data/gitlab_secrets.sh <<EOL
 #!/bin/sh
 set -u
 set -e
-export GITLAB_SECRETS_DB_KEY_BASE=${GITLAB_SECRETS_DB_KEY_BASE}
-export GITLAB_SECRETS_SECRET_KEY_BASE=${GITLAB_SECRETS_SECRET_KEY_BASE}
-export GITLAB_SECRETS_SECRET_KEY_BASE=${GITLAB_SECRETS_SECRET_KEY_BASE}
+echo export GITLAB_SECRETS_DB_KEY_BASE=${GITLAB_SECRETS_DB_KEY_BASE}
+echo export GITLAB_SECRETS_SECRET_KEY_BASE=${GITLAB_SECRETS_SECRET_KEY_BASE}
+echo export GITLAB_SECRETS_OTP_KEY_BASE=${GITLAB_SECRETS_OTP_KEY_BASE}
 EOL
 }
 
@@ -45,10 +45,11 @@ then
     echo "Generating GitLab secrets for the first time..."
     generate_gitlab_secrets
 else 
-    echo "Found existing GitLab keys. Skipping key generation" && ./data/gitlab_secrets.sh
+    echo "Found existing GitLab keys. Skipping key generation"
+    eval $(./data/gitlab_secrets.sh)
 fi
 
 set_concourse_external_url && echo "Setting CONCOURSE_EXTERNAL_URL to ${CONCOURSE_EXTERNAL_URL}"
 
-# docker-compose up
+docker-compose up
 # docker-compose start
