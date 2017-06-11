@@ -5,3 +5,4 @@ data/mongo
 data/postgresql
 data/redis             
 data/uploads
+.env

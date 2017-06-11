@@ -23,7 +23,6 @@ services:
     restart: always
     environment:
       - ROCKETCHAT_URL=rocketchat:3000
-      - ROCKETCHAT_ROOM=
       - LISTEN_ON_ALL_PUBLIC=true
       - ROCKETCHAT_USER=bender
       - ROCKETCHAT_PASSWORD=password
@@ -37,7 +36,7 @@ services:
     ports:
       - 3001:8080
     volumes:
-      - ./hubot-scripts/scripts:/home/hubot/scripts \
+      - ./hubot-scripts/scripts:/home/hubot/scripts
 
   # GitHub alternative
   # https://about.gitlab.com/
@@ -56,9 +55,9 @@ services:
     volumes:
       - ./data/gitlab/gitlab:/home/git/data:Z
     environment:
-      - GITLAB_SECRETS_DB_KEY_BASE="${GITLAB_SECRETS_DB_KEY_BASE}"         # TODO: Is this working?
-      - GITLAB_SECRETS_SECRET_KEY_BASE="${GITLAB_SECRETS_SECRET_KEY_BASE}" # TODO: Is this working?
-      - GITLAB_SECRETS_OTP_KEY_BASE="${GITLAB_SECRETS_OTP_KEY_BASE}"       # TODO: Is this working?
+      - GITLAB_SECRETS_DB_KEY_BASE=${GITLAB_SECRETS_DB_KEY_BASE}
+      - GITLAB_SECRETS_SECRET_KEY_BASE=${GITLAB_SECRETS_SECRET_KEY_BASE}
+      - GITLAB_SECRETS_OTP_KEY_BASE=${GITLAB_SECRETS_OTP_KEY_BASE}
 
       - DB_ADAPTER=postgresql
       - DB_HOST=postgresql
