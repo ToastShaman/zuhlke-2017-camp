@@ -1,0 +1,7 @@
+data/concourse
+data/gitlab
+data/gitlab_secrets.sh
+data/mongo
+data/postgresql
+data/redis             
+data/uploads
